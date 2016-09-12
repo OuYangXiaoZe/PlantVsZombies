@@ -21,7 +21,9 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 
+import android.content.Context;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 
 import com.ouyangxiaoze.plantvszombies.plantvszombies.R;
@@ -314,7 +316,7 @@ public class FightLayer extends BaseLayer {
 			} else {
 				if (isClick(event, plantChoosePool.getChildByTag(TAG_START_GAME))) {
 					// 点击开启游戏
-					if (chosePlants.size() == 5)
+					if (chosePlants.size() <= 5)
 						startGame();
 				} else {
 					// 处理选择植物
@@ -323,10 +325,16 @@ public class FightLayer extends BaseLayer {
 						ShowPlant showPlant = showPlants.get(i + 1);
 						if (isClick(event, showPlant.getPlant())) {
 							// 用户选择了一个植物
-							CCMoveTo moveTo = CCMoveTo.action(0.3f, ccp(75 + chosePlants.size() * 53f, winSize.height - 65));
-							showPlant.getPlant().runAction(moveTo);
-							showPlant.setEnd(ccp(75 + chosePlants.size() * 53f, winSize.height - 65));
-							chosePlants.add(i + 1);
+							if(chosePlants.size() < 5) {
+								CCMoveTo moveTo = CCMoveTo.action(0.3f, ccp(75 + chosePlants.size() * 53f, winSize.height - 65));
+								showPlant.getPlant().runAction(moveTo);
+								showPlant.setEnd(ccp(75 + chosePlants.size() * 53f, winSize.height - 65));
+								chosePlants.add(i + 1);
+							}else{
+//								Toast.makeText(getContext(),"你所选的植物已经超过五种了，无法在选择其他植物", Toast.LENGTH_SHORT).show();
+								System.out.println(chosePlants.size());
+								System.out.println("你所选的植物已经超过五种了，无法在选择其他植物");
+							}
 						}
 					}
 				}

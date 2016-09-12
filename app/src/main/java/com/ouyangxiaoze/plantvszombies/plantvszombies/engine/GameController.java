@@ -23,6 +23,8 @@ import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.ShowPlant;
 import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.base.Plant;
 import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.plant.PlantNut;
 import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.plant.PlantPease;
+import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.plant.PlantPotato;
+import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.plant.PlantSnowPease;
 import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.plant.PlantSun;
 import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.product.Sun;
 import com.ouyangxiaoze.plantvszombies.plantvszombies.bean.zombies.ZombiesPrimary;
@@ -80,9 +82,17 @@ public class GameController {
 	private Plant currentPlant;// 当前用户选择植物
 	private ShowPlant currentShowPlant;// 当前用户选择的展示植物
 
+	private  int GamePercentage;
 	private int zombiesNum = 20;// 僵尸添加的总数
 	private CCProgressTimer progressTimer;// 进度控制
 
+	/*
+	结束游戏
+	 */
+	public void destroyGame(){
+		isGameStart=false;
+
+	}
 	/**
 	 * 开启游戏
 	 *
@@ -142,6 +152,7 @@ public class GameController {
 	 * @param f
 	 */
 	public void addZombies(float f) {
+
 		if (zombiesNum > 0) {
 			Random random = new Random();
 			int line = random.nextInt(5);
@@ -150,7 +161,10 @@ public class GameController {
 			lines.get(line).addZombies(zombiesPrimary);
 			gameMap.getParent().addChild(zombiesPrimary, 1);
 			zombiesNum--;
-			progressTimer.setPercentage((Float) progressTimer.getPercentage() + 5);
+			progressTimer.setPercentage((Float) progressTimer.getPercentage() + 20);
+			GamePercentage=GamePercentage+20;
+			if((GamePercentage==100))
+				System.out.println("游戏关卡完成了");
 		} else {
 			// TODO 处理成功
 		}
@@ -183,8 +197,17 @@ public class GameController {
 							case 2:// 向日葵
 								currentPlant = new PlantSun();
 								break;
+
 							case 4:// 坚果
 								currentPlant = new PlantNut();
+								break;
+							case 5://此处加入土豆
+								currentPlant = new PlantPotato();
+								break;
+							case 6://此处加入寒冰射手
+								currentPlant = new PlantSnowPease();
+								break;
+							default:
 								break;
 						}
 						if (currentPlant != null && Sun.TOTLE_SUN >= currentPlant.getPrice()) {
@@ -201,6 +224,7 @@ public class GameController {
 					// 判断用户点击的地点是否可以安放植物（①是否在建造范围内②是否已经有植物建造）
 					if (isBuildAble(point)) {
 						addPlant(currentPlant);
+
 					}
 
 				} else {
@@ -281,13 +305,20 @@ public class GameController {
 			int reference = 0;
 			switch (item.getId()) {
 				case 1:// 单个豌豆
-					reference = 100;
+					reference = 10;
 					break;
 				case 2:// 向日葵
 					reference = 50;
 					break;
+
 				case 4:// 坚果
 					reference = 50;
+					break;
+				case 5://土豆
+					reference=25;
+					break;
+				case 6://寒冰射手
+					reference=10;
 					break;
 				default:
 					reference = 10000;

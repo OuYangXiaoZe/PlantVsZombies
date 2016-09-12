@@ -32,6 +32,12 @@ public class ZombiesPrimary extends Zombies {
 	private static String dieRes = "image/zombies/zombies_1/die/z_1_die_%02d.png";// 死亡
 	private static String headRes = "image/zombies/zombies_1/head/z_1_head_%02d.png";// 掉脑袋
 
+	//被攻击帧
+	private static ArrayList<CCSpriteFrame> attackedFrames=new ArrayList<CCSpriteFrame>();// 被攻击帧集合
+	private CCAnimation attackedAnimation;// 被攻击的帧
+	private CCAnimate attackedAnimate;// 被攻击动作
+
+
 	// 移动帧
 	private static ArrayList<CCSpriteFrame> moveFrames;// 移动帧集合
 	private CCAnimation moveAnimation;// 移动的帧
@@ -120,6 +126,15 @@ public class ZombiesPrimary extends Zombies {
 		if (action instanceof Bullet) {
 			int attack = ((Bullet) action).getAttack();
 			this.life -= attack;
+			//播放被击中动画
+			attackedFrames.add(CCSprite.sprite("image/zombies/zombies_1/attacked/attackedP01.png").displayedFrame());
+			attackedFrames.add(CCSprite.sprite("image/zombies/zombies_1/attacked/attackedP02.png").displayedFrame());
+			attackedFrames.add(CCSprite.sprite("image/zombies/zombies_1/attacked/attackedP03.png").displayedFrame());
+
+
+			attackedAnimation = CCAnimation.animation("", 0f, attackedFrames);
+			attackedAnimate = CCAnimate.action(attackedAnimation);
+            runAction(attackedAnimate);
 			if (life <= 0) {
 				CCScheduler.sharedScheduler().unschedule("attackPlant", this);
 				// 播放动画
@@ -197,14 +212,23 @@ public class ZombiesPrimary extends Zombies {
 	}
 
 	public void gameOver() {
+		//结束游戏
+
+		System.out.println("游戏结束了，你死掉了");
+		/*
+		显示是否重新开始游戏，还是退出，回到主菜单
+		 */
+
 		distory();
 	}
 
 	@Override
 	public void distory() {
 		isDie = true;
-		if (listener != null)
+		if (listener != null) {
 			listener.onDie(this);
+
+		}
 		super.distory();
 	}
 
