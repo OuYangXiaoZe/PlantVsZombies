@@ -30,15 +30,19 @@ public class PlantPease extends AttackPlant {
 
 	static {
 		motionlessFrames = new ArrayList<CCSpriteFrame>();
+
+
 		for (int i = 1; i < 9; i++) {
-			motionlessFrames.add(CCSprite.sprite(String.format(resPath, i)).displayedFrame());
+
+				motionlessFrames.add(CCSprite.sprite(String.format(resPath, i)).displayedFrame());
+
 		}
 	}
 
 	public PlantPease() {
 		super("image/plant/pease/p_2_01.png");
 		life = 100;
-		price = 100;
+		price = 10;
 		motionless();
 	}
 
